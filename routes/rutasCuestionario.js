@@ -5,6 +5,7 @@ router.get('/',(req,res)=>res.send('<h1>Ruta de inicio</h1>'));
 
 router.post('/api/cuestionarios/',(req,res)=>{
     const data={
+        idcuestionario:req.body.id,
         fechaCreacion:req.body.fecha,
         usuarioCreador:req.body.usuario,
         descripcion:req.body.descripcion
@@ -33,12 +34,14 @@ router.post('/api/cuestionarios/',(req,res)=>{
         });
 //editar un cuestionario
     router.put('/api/cuestionarios/:id',(req,res)=>{
-        let id=req.params.id;
-        let fecha=req.body.fecha;
-        let usuario=req.body.usuario;
-        let descripcion=req.body.descripcion;
+     let data={
+         id:req.body.id,
+         fecha:req.body.fecha,
+         usuario:req.body.usuario,
+         descripcion:req.body.descripcion
+     }
         let sql="update cuestionarios set fechaCreacion=?,usuarioCreador=?,descripcion=? where idcuestionario=?";
-            con.query(sql,[fecha,usuario,descripcion,id],(err,result)=>{
+            con.query(sql,data,(err,result)=>{
                 if(err)throw err;
                 res.send(result);
 
