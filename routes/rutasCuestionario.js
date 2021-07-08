@@ -34,14 +34,12 @@ router.post('/api/cuestionarios/',(req,res)=>{
         });
 //editar un cuestionario
     router.put('/api/cuestionarios/:id',(req,res)=>{
-     let data={
-         id:req.body.id,
-         fecha:req.body.fecha,
-         usuario:req.body.usuario,
-         descripcion:req.body.descripcion
-     }
+       let fecha=req.body.fecha;
+       let usuario=req.body.usuario;
+       let descripcion=req.body.descripcion;
+      let id=req.params.id;
         let sql="update cuestionarios set fechaCreacion=?,usuarioCreador=?,descripcion=? where idcuestionario=?";
-            con.query(sql,data,(err,result)=>{
+            con.query(sql,[fecha,usuario,descripcion,id],(err,result)=>{
                 if(err)throw err;
                 res.send(result);
 
