@@ -17,12 +17,11 @@ con.connect(err=>{
 
 app.get('/',(req,res)=>res.send('<h1>Ruta de inicio</h1>'));
 
-app.post('/api/cuestionarios/create',(req,res)=>{
+app.post('/api/cuestionarios/',(req,res)=>{
     const data={
-        idcuestionario:id,
-        fechaCreacion:fecha,
-        usuarioCreador:usuario,
-        descripcion:des
+        fechaCreacion:req.body.fecha,
+        usuarioCreador:req.body.usuario,
+        descripcion:req.body.descripcion
     };
     const sql="insert into cuestionarios set ?";
     con.query(sql,data,err=>{
@@ -30,41 +29,40 @@ app.post('/api/cuestionarios/create',(req,res)=>{
         res.send(data);
     });
     });
-
-    app.get('/api/cuestionarios/read',(req,res)=>{
+//mostrar todos los cuestionarios
+    app.get('/api/cuestionarios/',(req,res)=>{
 		con.query('select * from cuestionarios',(err,filas)=>{
 		if(err)throw err;
 		res.send(filas);
-		return filas;
-		});
-		});
 
-    app.get(`/api/cuestionarios/read/:id`,(req,res)=>{
+		});
+		});
+//mostrar un cuestionario
+    app.get('/api/cuestionarios/:id',(req,res)=>{
             con.query(`select * from cuestionarios where idcuestionario=?`,[req.params.id],(err,fila)=>{
                 if(err)throw err;
                 res.send(fila);
-                return fila;
+
             });
         });
-
-    app.put(`/api/cuestionarios/modify/:id`,(res,req)=>{
-            const data={
-                descripcion:desc,
-                fechaCreacion:fecha,
-                usuarioCreador:usuario,
-                id:id
-            };
-            con.query('update cuestionarios set descripcion=?,fechaCreacion=?,usuarioCreador=? where idcuestionario=?',data,(err,result)=>{
+//editar un cuestionario
+    app.put('/api/cuestionarios/:id',(req,res)=>{
+        let id=req.params.id;
+        let fecha=req.body.fecha;
+        let usuario=req.body.usuario;
+        let descripcion=req.body.descripcion;
+        let sql="update cuestionarios set fechaCreacion=?,usuarioCreador=?,descripcion=? where idcuestionario=?";
+            con.query(sql,[fecha,usuario,descripcion,id],(err,result)=>{
                 if(err)throw err;
                 res.send(result);
-                return result;
+
             });
         });
-
-       app.delete(`/api/cuestionarios/delete/:id`,(req,res)=>{
-            con.query('delete from cuestionarios where id=?',[req.params.id],err=>{
+//eliminar un cuestionario
+       app.delete('/api/cuestionarios/:id',(req,res)=>{
+            con.query('delete from cuestionarios where idcuestionario=?',[req.params.id],(err,result)=>{
                 if(err)throw err;
-                res.send("Articulo Eliminado");
+                res.send(result);
             });
         });
 
