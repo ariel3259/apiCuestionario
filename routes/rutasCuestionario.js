@@ -9,8 +9,12 @@ router.get('/',(req,res)=>res.send('<h1>Ruta de inicio</h1>'));
 router.post('/api/cuestionarios/',(req,res)=>{
     con.query('select max(idcuestionario)+1 as idcuestionario from cuestionarios',(err,result)=>{
         if(err) throw err;
-        let result2=result[0];
+         let result2=result[0];
         var result3=result2.idcuestionario;
+        if(result3==null){
+            result3=1
+        }
+       
          const data={
                idcuestionario:result3,
         fechaCreacion:req.body.fechaCreacion,
