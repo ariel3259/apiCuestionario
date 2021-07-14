@@ -17,8 +17,8 @@ router.post('/api/cuestionarios/',(req,res)=>{
        
          const data={
                idcuestionario:result3,
-        fechaCreacion:req.body.fechaCreacion,
-        usuarioCreador:req.body.usuarioCreador,
+        fechaCreacion:req.body.fecha,
+        usuarioCreador:req.body.usuario,
         descripcion:req.body.descripcion
     };
     const sql="insert into cuestionarios set ?";
