@@ -30,21 +30,56 @@ res.send("Ruta Inicio");
   })
   
   //Crear pregunta
-  router.post("/api/preguntas", (req, res) => {
-    let data = {
-      idpregunta: req.body.idpregunta,
+  
+router.post('/api/preguntas/', (req, res) => {
+  
+  con.query('select max(idpregunta)+1 as idpregunta from preguntas', (err, result) => {
+    
+    let result2 = result[0];
+    var result3 = result2.idpregunta;
+    console.log(result3);
+    if (result3 == null){
+      result3 = 1;
+    }
+    
+    const data = {
+
+      idpregunta: result3,
       descripcion: req.body.descripcion,
-      habilitado: req.body.habilitado
+      habilitado: req.body.habilitado,
+
     };
-    let sql = "INSERT INTO preguntas SET ?";
-    router.query(sql, data, (err, results) => {
-      if (err) {
-        throw err;
-      } else {
-        res.send(results);
-      }
+    
+    const sql = "insert into preguntas set ?";
+
+    con.query(sql, data, err => {
+
+      if (err) throw err;
+      res.send(data);
+
     });
+
   });
+
+});/*
+// crear pregunta en caso de autoincrement
+router.post("/api/preguntas", (req, res) => {
+  let data = {
+    idpregunta: req.body.idpregunta,
+    descripcion: req.body.descripcion,
+    habilitado: req.body.habilitado
+  };
+  let sql = "INSERT INTO preguntas SET ?";
+  con.query(sql, data, (err, results) => {
+    if (err) {
+      throw err;
+    } else {
+      res.send(results);
+    }
+  });
+});*/
+
+
   
   //Actualizar pregunta
  router.put('/api/preguntas/:idpregunta', (req, res) => {
@@ -52,9 +87,9 @@ res.send("Ruta Inicio");
     let descripcion = req.body.descripcion;
     let habilitado = req.body.habilitado;
     let sql = 'UPDATE preguntas SET descripcion= ?, habilitado= ? WHERE idpregunta= ?';
-    con.query(sql, [descripcion, habilitado,idpregunta], (err, results) => {
-      if (err) {
-        throw err;
+    con.query(sql, [descripcion, habilitado,idpregunta], (error, results) => {
+      if (error) {
+        throw error;
       } else {
         console.log(idpregunta);
         res.send(results);
@@ -64,10 +99,11 @@ res.send("Ruta Inicio");
   
   //Eliminar pregunta
   router.delete('/api/preguntas/:idpregunta', (req,res)=>{
-      con.query('DELETE FROM preguntas WHERE idpregunta= ?',[req.params.idpregunta], (err,results)=>{
-          if(err){
-              throw err;
+      con.query('DELETE FROM preguntas WHERE idpregunta= ?',[req.params.idpregunta], (error,results)=>{
+          if(error){
+              throw error;
           }else{
+              var idUtilizable = req.params.idpregunta;
               res.send(results);
           }
       })
